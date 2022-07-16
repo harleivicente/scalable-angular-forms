@@ -6,29 +6,26 @@
 
 <form [formGroup]="formGroup" (submit)="submitHandler($event)">
 
-  <div class="form-field">
-    <label class="form-label" for="nome">Nome</label>
-    <input class="pct-input" type="text" formControlName="nome" name="nome" id="nome">
-    
-    <span class="info-msg"> Preencha seu nome completo para sabermos mais sobre você. </span>
-    <span class="error-msg" *ngIf="(submitted || formGroup.get('nome').touched) && formGroup.get('nome').hasError('required')">
-      O nome é obrigatório.
-    </span>
-  
-  </div>
+  <pct-form-field>
+    <pct-field-label> Nome </pct-field-label>
+    <input pctTextInput formControlName="nome">
+    <pct-field-info> Preencha seu nome completo para sabermos mais sobre você. </pct-field-info>
+    <pct-field-error *ngIf="nomeFc.hasError('required')"> O nome é obrigatório. </pct-field-error>
+    <pct-field-error *ngIf="nomeFc.hasError('maxlength')"> O nome não pode ser maior do que 20 caracteres. </pct-field-error>
+  </pct-form-field>
 
-  <div class="form-field">
-    <label class="form-label" for="nome">Estado de Origem </label>
-    <select class="pct-select" name="estado" id="estado" formControlName="estado">
+
+  <pct-form-field>
+    <pct-field-label> Estado de Origem </pct-field-label>
+    <select pctSelect formControlName="estado">
       <option></option>
       <option value="GO"> Goias </option>
       <option value="SP"> São Paulo </option>
       <option value="MG"> Minas Gerais </option>
     </select>
-    <span class="error-msg" *ngIf="(submitted || formGroup.get('estado').touched) && formGroup.get('estado').hasError('required')"> O estado é obrigatório. </span>
-  </div>
+    <pct-field-error> O estado é obrigatório. </pct-field-error>
+  </pct-form-field>
 
   <button type="submit"> Enviar </button>
-
 
 </form>

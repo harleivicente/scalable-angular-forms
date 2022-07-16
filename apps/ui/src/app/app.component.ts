@@ -11,11 +11,15 @@ export class AppComponent implements OnInit {
   submitted = false;
 
   formGroup = new FormGroup({
-    nome: new FormControl('', [ Validators.required ]),
+    nome: new FormControl('', [ Validators.required, Validators.maxLength(20) ]),
     estado: new FormControl('', [ Validators.required ])
   });
 
   ngOnInit() {}
+
+  get nomeFc() {
+    return this.formGroup.get('nome');
+  }
 
   submitHandler(data) {
     this.submitted = true;

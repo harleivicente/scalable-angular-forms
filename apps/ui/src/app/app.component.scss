@@ -5,36 +5,3 @@
   padding: 30px;
 }
 
-.form-field {
-  margin: 15px 0px;
-}
-
-.info-msg {
-  display: block;
-  font-size: 12px;
-  padding-top: 5px;
-  color: rgb(94, 94, 94);
-}
-
-.error-msg {
-  display: block;
-  font-size: 12px;
-  padding-top: 5px;
-  color: rgb(222, 47, 47);
-}
-
-.form-label {
-  display: block;
-  padding-bottom: 6px;
-}
-
-input.pct-input {
-  width: calc(100% - 10px);
-  height: 24px;
-  padding: 3px;
-}
-
-select.pct-select {
-  height: 34px;
-  width: 100%;
-}
