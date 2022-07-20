@@ -1,0 +1,36 @@
+
+:host {
+    display: block;
+    position: relative;
+}
+
+.display-value {
+    width: calc(100% - 12px);
+    position: relative;
+    border: 1px solid #767676;
+    height: 22px;
+    line-height: 22px;
+    padding: 5px;
+    border-radius: 2px;
+    z-index: 2;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dropdown-container {
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    top: 33px;
+    z-index: 1;
+    background-color: white;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-left: 1px solid darkgrey;
+    border-right: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+}
+
+.option-container {
+    cursor: pointer;
+}

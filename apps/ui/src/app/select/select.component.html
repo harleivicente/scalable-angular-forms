@@ -1,0 +1,18 @@
+
+
+
+
+<div class="display-value" tabindex="0" (click)="displayClickHandler()">
+    {{ val }}
+</div>
+
+
+<div class="dropdown-container" *ngIf="optionTemplate && openDropdown">
+    <div
+        (click)="optionClick(option)" 
+        class="option-container" *ngFor="let option of options">
+        <ng-container 
+            *ngTemplateOutlet="optionTemplate; context: { $implicit: option }">
+        </ng-container>
+    </div>
+</div>

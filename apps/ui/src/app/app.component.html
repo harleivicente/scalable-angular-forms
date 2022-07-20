@@ -26,6 +26,20 @@
     <pct-field-error> O estado é obrigatório. </pct-field-error>
   </pct-form-field>
 
+  <pct-form-field>
+    <pct-field-label> Tipo de Plano </pct-field-label>
+
+    <pct-select [options]="tiposDePlano" formControlName="plano">
+      
+      <div *pctSelectCurrent="let item"> This is the selected value </div>
+      
+      <div class="option-template" *pctSelectOption="let abc">
+        {{ abc.nome }}
+      </div>
+
+    </pct-select>
+  </pct-form-field>
+
   <button type="submit"> Enviar </button>
 
 </form>
