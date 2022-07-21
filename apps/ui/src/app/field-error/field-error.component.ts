@@ -33,7 +33,7 @@ export class FieldErrorComponent implements OnInit {
   private updateErrorVisibility() {
     const field = this.formField;
     if (field && field.control) {
-      if (field.control.status === "INVALID" && field.control.touched) {
+        if (field.control.status === "INVALID" && field.control.touched) {
         this.show();
       } else {
         this.hide();

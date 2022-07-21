@@ -11,11 +11,10 @@ import { FieldErrorComponent } from './field-error/field-error.component';
 import { SelectDirective } from './select.directive';
 import { SelectComponent } from './select/select.component';
 import { SelectCurrentDirective } from './select-current.directive';
-import { SelectOptionDirective } from './select-option.directive';
 import { SelectOptionComponent } from './select-option/select-option.component';
 
 @NgModule({
-  declarations: [AppComponent, FormFieldComponent, TextInputDirective, FieldLabelComponent, FieldInfoComponent, FieldErrorComponent, SelectDirective, SelectComponent, SelectCurrentDirective, SelectOptionDirective, SelectOptionComponent],
+  declarations: [AppComponent, FormFieldComponent, TextInputDirective, FieldLabelComponent, FieldInfoComponent, FieldErrorComponent, SelectDirective, SelectComponent, SelectCurrentDirective, SelectOptionComponent],
   imports: [
     BrowserModule,
     FormsModule,

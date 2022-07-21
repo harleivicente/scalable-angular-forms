@@ -2,7 +2,7 @@ import { Component, ContentChild, OnInit, ViewChild } from '@angular/core';
 import { FormControlName } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FieldLabelComponent } from '../field-label/field-label.component';
-import { SelectDirective } from '../select.directive';
+import { SelectComponent } from '../select/select.component';
 import { TextInputDirective } from '../text-input.directive';
 
 @Component({
@@ -17,7 +17,7 @@ export class FormFieldComponent implements OnInit {
 
   // Field types
   @ContentChild(TextInputDirective, { static: true }) textInput: TextInputDirective;
-  @ContentChild(SelectDirective, { static: true }) selectInput: TextInputDirective;
+  @ContentChild(SelectComponent, { static: true }) selectInput: SelectComponent;
 
   constructor() {}
 

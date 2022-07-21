@@ -28,7 +28,16 @@
 
   <pct-form-field>
     <pct-field-label> Tipo de Plano </pct-field-label>
+    <pct-select formControlName="plano">
+      <pct-select-option *ngFor="let tipo of tiposDePlano" [value]="tipo.nome">
+        {{ tipo.nome }} - R${{ tipo.preco }},00
+      </pct-select-option>
+    </pct-select>
+    <pct-field-error> O Tipo de plano é obrigatório. </pct-field-error>
+  </pct-form-field>
 
+  <!-- <pct-form-field>
+    <pct-field-label> Tipo de Plano </pct-field-label>
     <pct-select formControlName="plano">
       
       <div class="tipo-selected" *pctSelectCurrent="let item">
@@ -41,7 +50,7 @@
       </pct-select-option>
 
     </pct-select>
-  </pct-form-field>
+  </pct-form-field> -->
 
   <button type="submit"> Enviar </button>
 

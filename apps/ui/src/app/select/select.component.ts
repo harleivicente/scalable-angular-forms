@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, forwardRef, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Observable, Observer } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
 
 @Component({
@@ -16,9 +17,20 @@ import { SelectCurrentDirective } from '../select-current.directive';
 })
 export class SelectComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   @ContentChild(SelectCurrentDirective, { static: true }) currentTemplateDirective: SelectCurrentDirective;
-  
-  val;
-  protected openDropdown = false;
+  private observer: Observer<void>;
+  protected isDropdownOpen = false;
+
+  public blur$: Observable<void> = new Observable(observer => {
+    this.observer = observer;
+  });
+
+  public val;
+
+  set value(val) {
+    this.val = val
+    this.onChange(val)
+    this.onTouch(val)
+  }
 
   get valueIsDefined() {
     return !!this.val && typeof this.val !== 'boolean';
@@ -32,32 +44,35 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
     }
   }
 
-  constructor() {}
+  constructor(public elemenetRef: ElementRef<HTMLInputElement>) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.elemenetRef.nativeElement.setAttribute("tabindex", 0);
+  }
 
   ngAfterViewInit() {}
 
-  selectOption(value) {
+  public selectOption(value) {
     this.val = value
     this.onChange(value)
     this.onTouch(value)
-    this.openDropdown = false;
+    this.isDropdownOpen = false;
   }
 
   protected displayClickHandler() {
-    this.openDropdown = !this.openDropdown;
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('blur')
+  protected blurHandler() {
+    this.onTouch();
+    this.observer.next();
+    this.isDropdownOpen = false;
   }
 
   onChange: any = () => {}
 
   onTouch: any = () => {}
-
-  set value(val) {
-    this.val = val
-    this.onChange(val)
-    this.onTouch(val)
-  }
 
   writeValue(value: any){ 
     this.value = value;

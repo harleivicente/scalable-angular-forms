@@ -1,5 +1,5 @@
 
-<div class="pct-display-value" tabindex="0" (click)="displayClickHandler()">
+<div class="pct-display-value" (click)="displayClickHandler()">
 
     <i class="bi bi-chevron-down"></i>
 
@@ -19,11 +19,10 @@
 
     <ng-container *ngIf="!valueIsDefined"> Selecione um valor </ng-container>
 
-
 </div>
 
 <div class="dropdown-container-anchor">
-    <div class="dropdown-container" *ngIf="openDropdown">
+    <div class="dropdown-container" *ngIf="isDropdownOpen">
         <ng-content></ng-content>
     </div>
 </div>

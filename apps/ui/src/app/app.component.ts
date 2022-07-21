@@ -19,12 +19,11 @@ export class AppComponent implements OnInit {
   formGroup = new FormGroup({
     nome: new FormControl('', [ Validators.required, Validators.maxLength(20) ]),
     estado: new FormControl('', [ Validators.required ]),
-    plano: new FormControl('', [ Validators.required ])
+    plano: new FormControl('', [ Validators.required ]),
+    professor: new FormControl('', [ Validators.required ]),
   });
 
-  ngOnInit() {
-    this.formGroup.get('plano').valueChanges.subscribe(v => console.log(v));
-  }
+  ngOnInit() {}
 
   get nomeFc() {
     return this.formGroup.get('nome');
