@@ -1,18 +1,29 @@
 
+<div class="pct-display-value" tabindex="0" (click)="displayClickHandler()">
+
+    <i class="bi bi-chevron-down"></i>
+
+    <ng-container *ngIf="valueIsDefined">
+
+        <ng-container *ngIf="selectedValueTemplate">
+            <ng-container 
+            *ngTemplateOutlet="selectedValueTemplate; context: { $implicit: val }"
+            ></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!selectedValueTemplate">
+            {{ val }}
+        </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="!valueIsDefined"> Selecione um valor </ng-container>
 
 
-
-<div class="display-value" tabindex="0" (click)="displayClickHandler()">
-    {{ val }}
 </div>
 
-
-<div class="dropdown-container" *ngIf="optionTemplate && openDropdown">
-    <div
-        (click)="optionClick(option)" 
-        class="option-container" *ngFor="let option of options">
-        <ng-container 
-            *ngTemplateOutlet="optionTemplate; context: { $implicit: option }">
-        </ng-container>
+<div class="dropdown-container-anchor">
+    <div class="dropdown-container" *ngIf="openDropdown">
+        <ng-content></ng-content>
     </div>
 </div>

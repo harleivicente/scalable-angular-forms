@@ -29,13 +29,16 @@
   <pct-form-field>
     <pct-field-label> Tipo de Plano </pct-field-label>
 
-    <pct-select [options]="tiposDePlano" formControlName="plano">
+    <pct-select formControlName="plano">
       
-      <div *pctSelectCurrent="let item"> This is the selected value </div>
-      
-      <div class="option-template" *pctSelectOption="let abc">
-        {{ abc.nome }}
+      <div class="tipo-selected" *pctSelectCurrent="let item">
+        <img src="https://avataaars.io/?avatarStyle=Circle" />
+        {{ item }}
       </div>
+
+      <pct-select-option *ngFor="let tipo of tiposDePlano" [value]="tipo.nome">
+        {{ tipo.nome }} - R${{ tipo.preco }},00
+      </pct-select-option>
 
     </pct-select>
   </pct-form-field>

@@ -5,6 +5,13 @@
   padding: 30px;
 }
 
-.option-template {
-  padding: 5px;
+.tipo-selected {
+  display: flex;
+  align-items: center;
+  img {
+    width: 20px;
+    margin-right: 5px;
+  }
 }
+
+

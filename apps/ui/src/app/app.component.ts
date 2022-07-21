@@ -11,9 +11,9 @@ export class AppComponent implements OnInit {
   submitted = false;
 
   tiposDePlano = [
-    { id: 1, nome: 'Plano Basico', preco: 67 },
-    { id: 2, nome: 'Plano Intermediario', preco: 127 },
-    { id: 3, nome: 'Plano Completo', preco: 246 }
+    { id: 1, nome: 'Plano Basico', preco: 67, profileUrl: "https://avataaars.io/?avatarStyle=Circle" },
+    { id: 2, nome: 'Plano Intermediario', preco: 127, profileUrl: "https://avataaars.io/?avatarStyle=Circle" },
+    { id: 3, nome: 'Plano Completo', preco: 246, profileUrl: "https://avataaars.io/?avatarStyle=Circle" }
   ];
 
   formGroup = new FormGroup({
@@ -22,7 +22,9 @@ export class AppComponent implements OnInit {
     plano: new FormControl('', [ Validators.required ])
   });
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.formGroup.get('plano').valueChanges.subscribe(v => console.log(v));
+  }
 
   get nomeFc() {
     return this.formGroup.get('nome');

@@ -1,27 +1,38 @@
 
 :host {
     display: block;
-    position: relative;
 }
 
-.display-value {
-    width: calc(100% - 12px);
+.pct-display-value {
+    width: 100%;
     position: relative;
     border: 1px solid #767676;
-    height: 22px;
     line-height: 22px;
     padding: 5px;
     border-radius: 2px;
     z-index: 2;
     background-color: white;
-    cursor: pointer;
+    cursor: default;
+    
+    i {
+        position: absolute;
+        right: 4px;
+        top: 7px;
+        font-size: 12px;
+    }
+}
+
+.dropdown-container-anchor {
+    position: relative;
+    width: 100%;
+    height: 0px;
 }
 
 .dropdown-container {
     position: absolute;
     left: 1px;
     right: 1px;
-    top: 33px;
+    top: 0px;
     z-index: 1;
     background-color: white;
     border-bottom-left-radius: 2px;
@@ -29,8 +40,4 @@
     border-left: 1px solid darkgrey;
     border-right: 1px solid darkgrey;
     border-bottom: 1px solid darkgrey;
-}
-
-.option-container {
-    cursor: pointer;
 }

@@ -11,8 +11,8 @@ export class TextInputDirective implements OnInit {
   });
 
   private css = `
-    width: calc(100% - 10px);
-    height: 24px;
+    width: 100%;
+    line-height: 24px;
     padding: 3px;
   `;
 

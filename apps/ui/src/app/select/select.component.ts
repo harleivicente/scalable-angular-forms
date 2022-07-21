@@ -1,7 +1,6 @@
-import { Component, ContentChild, forwardRef, HostListener, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, forwardRef, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectCurrentDirective } from '../select-current.directive';
-import { SelectOptionDirective } from '../select-option.directive';
 
 @Component({
   selector: 'pct-select',
@@ -15,21 +14,34 @@ import { SelectOptionDirective } from '../select-option.directive';
     }
   ]
 })
-export class SelectComponent implements OnInit, ControlValueAccessor {
-  @Input() options: object[] = [];
+export class SelectComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   @ContentChild(SelectCurrentDirective, { static: true }) currentTemplateDirective: SelectCurrentDirective;
-  @ContentChild(SelectOptionDirective, { static: true }) optionTemplateDirective: SelectOptionDirective;
-  val= "";
+  
+  val;
   protected openDropdown = false;
+
+  get valueIsDefined() {
+    return !!this.val && typeof this.val !== 'boolean';
+  }
+
+  get selectedValueTemplate(): TemplateRef<any> {
+    if (this.currentTemplateDirective) {
+      return this.currentTemplateDirective.templateRef;
+    } else {
+      return null;
+    }
+  }
 
   constructor() {}
 
   ngOnInit() {}
 
-  optionClick(option) {
-    this.val = option.nome
-    this.onChange(option.nome)
-    this.onTouch(option.nome)
+  ngAfterViewInit() {}
+
+  selectOption(value) {
+    this.val = value
+    this.onChange(value)
+    this.onTouch(value)
     this.openDropdown = false;
   }
 
@@ -40,14 +52,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
   onChange: any = () => {}
 
   onTouch: any = () => {}
-
-  get optionTemplate() {
-    if (this.optionTemplateDirective) {
-      return this.optionTemplateDirective.templateRef;
-    } else {
-      return null;
-    }
-  }
 
   set value(val) {
     this.val = val

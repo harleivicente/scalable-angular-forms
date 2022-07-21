@@ -1,0 +1,9 @@
+:host {
+    display: block;
+    cursor: pointer;
+    padding: 3px;
+
+    &:hover {
+        background-color: lightgrey;
+    }
+}
