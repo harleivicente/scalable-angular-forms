@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnDestroy, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BehaviorSubject, Observable, Observer, Subject, Subscription } from 'rxjs';
+import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
 import { SelectOptionComponent } from '../select-option/select-option.component';
 
@@ -20,37 +20,15 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
   @ContentChild(SelectCurrentDirective, { static: true }) currentTemplateDirective: SelectCurrentDirective;
   @ContentChildren(SelectOptionComponent) options: QueryList<SelectOptionComponent>;
   
-  @HostBinding('class.dropdown-open')
-  protected isDropdownOpen = false;
-
+  @HostBinding('class.dropdown-open') protected isDropdownOpen = false;
   private optionSelectSubscriptions: Subscription[] = [];
   private optionListSubscription: Subscription;
   private observer: Observer<void>;
-  public keyboardSelectionIndex: BehaviorSubject<number> = new BehaviorSubject(null);
-
-  public blur$: Observable<void> = new Observable(observer => {
+  keyboardSelectionIndex = null;
+  blur$: Observable<void> = new Observable(observer => {
     this.observer = observer;
   });
-
-  public val;
-
-  set value(val) {
-    this.val = val
-    this.onChange(val)
-    this.onTouch(val)
-  }
-
-  get valueIsDefined() {
-    return !!this.val && typeof this.val !== 'boolean';
-  }
-
-  get selectedValueTemplate(): TemplateRef<any> {
-    if (this.currentTemplateDirective) {
-      return this.currentTemplateDirective.templateRef;
-    } else {
-      return null;
-    }
-  }
+  val;
 
   constructor(public elemenetRef: ElementRef<HTMLInputElement>) {
     this.elemenetRef.nativeElement.setAttribute("tabindex", "0");
@@ -70,45 +48,55 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
     this.optionListSubscription.unsubscribe();
   }
 
-  private clearOptionSelectSubcriptions() {
-    this.optionSelectSubscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-  }
-
-  private hookUpOptionSubcriptions() {
-    this.clearOptionSelectSubcriptions();
-    this.optionSelectSubscriptions = this.options.map(option => {
-      return option.selected.subscribe(value => {
-        this.selectOption(value);
-      });
-    });
-  }
-
-  public selectOption(value) {
-    this.val = value
-    this.onChange(value)
-    this.onTouch(value)
-    this.isDropdownOpen = false;
-  }
-
-  protected displayClickHandler() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  @HostListener('blur')
+  blurHandler() {
+    this.onTouch();
+    this.observer.next();
+    this.closeDropdown();
   }
 
   @HostListener('keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+    if (event.key === "ArrowDown") this.handleMoveKeyboardSelection("DOWN");
+    if (event.key === "ArrowUp") this.handleMoveKeyboardSelection("UP");
+    
+    if (event.key === "Enter") {
 
-    if (event.key === "ArrowDown") this.handleMoveKeyboardSelection("DOWN")
-    if (event.key === "ArrowUp") this.handleMoveKeyboardSelection("UP")
+      if (!this.isDropdownOpen) {
+        this.openDropdown();
+        return;
+      }
 
-    if (event.key === "Enter") this.isDropdownOpen = !this.isDropdownOpen;
+      if (this.isDropdownOpen && this.keyboardSelectionIndex === null) {
+        this.closeDropdown();
+        return;
+      }
+
+      if (this.isDropdownOpen && this.keyboardSelectionIndex !== null) {
+        const value = this.options.toArray()[this.keyboardSelectionIndex].value;
+        this.value = value;
+        this.closeDropdown();
+        return;
+      }
+
+    }
   }
 
-  @HostListener('blur')
-  protected blurHandler() {
-    this.onTouch();
-    this.observer.next();
-    this.isDropdownOpen = false;
+  set value(val) {
+    this.val = val
+    this.onChange(val)
+    this.onTouch(val)
+  }
+
+  get valueIsDefined() {
+    return !!this.val && typeof this.val !== 'boolean';
+  }
+
+  get selectedValueTemplate(): TemplateRef<any> {
+    if (this.currentTemplateDirective) {
+      return this.currentTemplateDirective.templateRef;
+    } else {
+      return null;
+    }
   }
 
   onChange: any = () => {}
@@ -116,7 +104,7 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
   onTouch: any = () => {}
 
   writeValue(value: any){ 
-    this.value = value;
+    this.val = value;
   }
 
   registerOnChange(fn: any){
@@ -127,15 +115,56 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
     this.onTouch = fn;
   }
 
+  protected displayClickHandler() {
+    if (this.isDropdownOpen) {
+      this.closeDropdown();
+    } else {
+      this.openDropdown();
+    }
+    this.elemenetRef.nativeElement.focus();
+  }
+
+  private clearOptionSelectSubcriptions() {
+    this.optionSelectSubscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  private hookUpOptionSubcriptions() {
+    this.clearOptionSelectSubcriptions();
+    this.optionSelectSubscriptions = this.options.map(option => {
+      return option.selected.subscribe(value => {
+        this.value = value;
+        this.closeDropdown();
+      });
+    });
+  }
+
+  private openDropdown() {
+    this.isDropdownOpen = true;
+  }
+
+  private closeDropdown() {
+    this.isDropdownOpen = false;
+    this.setKeyboardSelection(null);
+  }
+
+  private setKeyboardSelection(index) {
+    this.keyboardSelectionIndex = index;
+    this.options.forEach((option, optionIndex) => {
+      option.isKeyboardSelection = index === optionIndex;
+    });
+  }
+
   private handleMoveKeyboardSelection(direction: "UP" | "DOWN") {
     const up = direction === "UP";
     const down = direction === "DOWN";
-    const numberOfOptions = 0;
+    const numberOfOptions = this.options.length;
     const lastIndex = numberOfOptions - 1;
-    const currentIndex = this.keyboardSelectionIndex.value;
+    const currentIndex = this.keyboardSelectionIndex;
 
     if (!this.isDropdownOpen && down) {
-      this.isDropdownOpen = true;
+      this.openDropdown();
       return;
     }
 
@@ -144,19 +173,19 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
     }
 
     if (currentIndex === null) {
-      this.keyboardSelectionIndex.next(down ? 0 : lastIndex);
+      this.setKeyboardSelection(down ? 0 : lastIndex);
       return;
     }
 
     if (up) {
       const negativeOverflow = currentIndex <= 0;
-      this.keyboardSelectionIndex.next(negativeOverflow ? lastIndex : currentIndex - 1);
+      this.setKeyboardSelection(negativeOverflow ? lastIndex : currentIndex - 1);
       return;
     }
     
     if (down) {
       const positiveOverflow = currentIndex === lastIndex;
-      this.keyboardSelectionIndex.next(positiveOverflow ? 0 : currentIndex + 1);
+      this.setKeyboardSelection(positiveOverflow ? 0 : currentIndex + 1);
       return;
     }
   }

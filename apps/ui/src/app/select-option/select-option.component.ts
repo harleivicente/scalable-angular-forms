@@ -7,6 +7,7 @@ import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
 })
 export class SelectOptionComponent implements OnInit, OnDestroy {
   @Input() value: any;
+  @Input() isKeyboardSelection = false;
   @Output() selected: EventEmitter<any> = new EventEmitter();
 
   @HostListener('click')
