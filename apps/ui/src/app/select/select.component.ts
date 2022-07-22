@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
 
 @Component({
@@ -17,8 +17,13 @@ import { SelectCurrentDirective } from '../select-current.directive';
 })
 export class SelectComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   @ContentChild(SelectCurrentDirective, { static: true }) currentTemplateDirective: SelectCurrentDirective;
-  private observer: Observer<void>;
+  
+  @HostBinding('class.dropdown-open')
   protected isDropdownOpen = false;
+
+  private observer: Observer<void>;
+  private optionCounter = 0;
+  public keyboardSelectionIndex: BehaviorSubject<number> = new BehaviorSubject(null);
 
   public blur$: Observable<void> = new Observable(observer => {
     this.observer = observer;
@@ -44,10 +49,12 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
     }
   }
 
-  constructor(public elemenetRef: ElementRef<HTMLInputElement>) {}
+  constructor(public elemenetRef: ElementRef<HTMLInputElement>) {
+    this.elemenetRef.nativeElement.setAttribute("tabindex", "0");
+  }
 
   ngOnInit() {
-    this.elemenetRef.nativeElement.setAttribute("tabindex", 0);
+    this.keyboardSelectionIndex.subscribe(v => console.log(v));
   }
 
   ngAfterViewInit() {}
@@ -59,8 +66,20 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
     this.isDropdownOpen = false;
   }
 
+  public incrementOptionCount() { this.optionCounter++; }
+
+  public decreaseOptionCount() { this.optionCounter--; }
+
   protected displayClickHandler() {
     this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('keydown', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+
+    if (event.key === "ArrowDown") this.handleMoveKeyboardSelection("DOWN")
+    if (event.key === "ArrowUp") this.handleMoveKeyboardSelection("UP")
+
+    if (event.key === "Enter") this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   @HostListener('blur')
@@ -84,6 +103,40 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
 
   registerOnTouched(fn: any){
     this.onTouch = fn;
+  }
+
+  private handleMoveKeyboardSelection(direction: "UP" | "DOWN") {
+    const up = direction === "UP";
+    const down = direction === "DOWN";
+    const numberOfOptions = this.optionCounter;
+    const lastIndex = numberOfOptions - 1;
+    const currentIndex = this.keyboardSelectionIndex.value;
+
+    if (!this.isDropdownOpen && down) {
+      this.isDropdownOpen = true;
+      return;
+    }
+
+    if (!this.isDropdownOpen && up) {
+      return;
+    }
+
+    if (currentIndex === null) {
+      this.keyboardSelectionIndex.next(down ? 0 : lastIndex);
+      return;
+    }
+
+    if (up) {
+      const negativeOverflow = currentIndex <= 0;
+      this.keyboardSelectionIndex.next(negativeOverflow ? lastIndex : currentIndex - 1);
+      return;
+    }
+    
+    if (down) {
+      const positiveOverflow = currentIndex === lastIndex;
+      this.keyboardSelectionIndex.next(positiveOverflow ? 0 : currentIndex + 1);
+      return;
+    }
   }
 
 }

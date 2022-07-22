@@ -1,6 +1,10 @@
 
 :host {
     display: block;
+
+    &.dropdown-open {
+        outline: none;
+    }
 }
 
 .pct-display-value {

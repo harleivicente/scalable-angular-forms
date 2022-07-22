@@ -1,9 +1,16 @@
 :host {
     display: block;
     cursor: pointer;
-    padding: 3px;
-
+    
     &:hover {
+        background-color: rgb(234, 234, 234);
+    }
+}
+
+.wrapper {
+    padding: 3px;
+    
+    &.selected {
         background-color: rgb(234, 234, 234);
     }
 }
