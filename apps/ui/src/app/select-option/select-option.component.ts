@@ -10,7 +10,7 @@ export class SelectOptionComponent implements OnInit, OnDestroy {
   @Input() isKeyboardSelection = false;
   @Output() selected: EventEmitter<any> = new EventEmitter();
 
-  @HostListener('click')
+  @HostListener('click', ['$event'])
   protected clickHandler() {
     this.selected.next(this.value);
   }

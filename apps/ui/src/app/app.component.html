@@ -1,4 +1,3 @@
-
 <h1> Pacto Formulários </h1>
 
 
@@ -6,19 +5,21 @@
 
 <form [formGroup]="formGroup" (submit)="submitHandler($event)">
 
+  <!-- Input nativo -->
   <pct-form-field>
     <pct-field-label> Nome </pct-field-label>
     <input pctTextInput formControlName="nome">
     <pct-field-info> Preencha seu nome completo para sabermos mais sobre você. </pct-field-info>
     <pct-field-error *ngIf="nomeFc.hasError('required')"> O nome é obrigatório. </pct-field-error>
-    <pct-field-error *ngIf="nomeFc.hasError('maxlength')"> O nome não pode ser maior do que 20 caracteres. </pct-field-error>
+    <pct-field-error *ngIf="nomeFc.hasError('maxlength')"> O nome não pode ser maior do que 20 caracteres.
+    </pct-field-error>
   </pct-form-field>
 
-
+  <!-- Select nativo -->
   <pct-form-field>
     <pct-field-label> Estado de Origem </pct-field-label>
     <select pctSelect formControlName="estado">
-      <option></option>
+      <option value> Selecione um Estado </option>
       <option value="GO"> Goias </option>
       <option value="SP"> São Paulo </option>
       <option value="MG"> Minas Gerais </option>
@@ -26,32 +27,45 @@
     <pct-field-error> O estado é obrigatório. </pct-field-error>
   </pct-form-field>
 
+  <!-- Select customizado sem template -->
   <pct-form-field>
     <pct-field-label> Tipo de Plano </pct-field-label>
     <pct-select formControlName="plano">
       <pct-select-option *ngFor="let tipo of tiposDePlano" [value]="tipo.nome">
-        {{ tipo.nome }} - R${{ tipo.preco }},00
+        <span style="line-height: 30px;">{{ tipo.nome }} - R${{ tipo.preco }},00</span>
       </pct-select-option>
     </pct-select>
     <pct-field-error> O Tipo de plano é obrigatório. </pct-field-error>
   </pct-form-field>
 
-  <!-- <pct-form-field>
-    <pct-field-label> Tipo de Plano </pct-field-label>
-    <pct-select formControlName="plano">
-      
-      <div class="tipo-selected" *pctSelectCurrent="let item">
+
+  <!-- Select customizado com template -->
+  <pct-form-field>
+    <pct-field-label> Professor (Opcional) </pct-field-label>
+    <pct-select formControlName="professor">
+
+      <div class="professor-selected-item" *pctSelectCurrent="let item">
         <img src="https://avataaars.io/?avatarStyle=Circle" />
-        {{ item }}
+        {{ item.nome }}
       </div>
 
-      <pct-select-option *ngFor="let tipo of tiposDePlano" [value]="tipo.nome">
-        {{ tipo.nome }} - R${{ tipo.preco }},00
+      <pct-select-option *ngFor="let professor of professores; let last = last" [value]="professor">
+        <div class="professor-item" [ngClass]="{ last: last }">
+          <img src="https://avataaars.io/?avatarStyle=Circle" />
+          <div class="info">
+            <div> {{ professor.nome }} - {{ professor.idade }} </div>
+            <div class="formacao"> {{ professor.formacao }} </div>
+          </div>
+          <div class="actions">
+            <i (click)="professorIconClickHandler($event, 'Desempenho')" class="bi bi-newspaper"
+              title="Ver Desempenho"></i>
+            <i *ngIf="professor.altoCusto" (click)="professorIconClickHandler($event, 'Custo')"
+              class="bi bi-currency-dollar" title="Alto Custo"></i>
+          </div>
+        </div>
       </pct-select-option>
-
     </pct-select>
-  </pct-form-field> -->
+  </pct-form-field>
 
-  <button type="submit"> Enviar </button>
-
+  <button class="btn btn-primary" type="submit"> Enviar </button>
 </form>

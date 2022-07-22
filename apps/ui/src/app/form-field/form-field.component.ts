@@ -2,6 +2,7 @@ import { Component, ContentChild, OnInit, ViewChild } from '@angular/core';
 import { FormControlName } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FieldLabelComponent } from '../field-label/field-label.component';
+import { SelectDirective } from '../select.directive';
 import { SelectComponent } from '../select/select.component';
 import { TextInputDirective } from '../text-input.directive';
 
@@ -18,6 +19,7 @@ export class FormFieldComponent implements OnInit {
   // Field types
   @ContentChild(TextInputDirective, { static: true }) textInput: TextInputDirective;
   @ContentChild(SelectComponent, { static: true }) selectInput: SelectComponent;
+  @ContentChild(SelectDirective, { static: true }) selectDirective: SelectDirective;
 
   constructor() {}
 
@@ -28,6 +30,7 @@ export class FormFieldComponent implements OnInit {
   get blur$() : Observable<void> {
     if (this.textInput) return this.textInput.blur$;
     if (this.selectInput) return this.selectInput.blur$;
+    if (this.selectDirective) return this.selectDirective.blur$;
     return null;
   }
 

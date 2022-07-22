@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnDestroy, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subject, Subscription } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
 import { SelectOptionComponent } from '../select-option/select-option.component';
 
@@ -21,13 +21,11 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
   @ContentChildren(SelectOptionComponent) options: QueryList<SelectOptionComponent>;
   
   @HostBinding('class.dropdown-open') protected isDropdownOpen = false;
+
   private optionSelectSubscriptions: Subscription[] = [];
   private optionListSubscription: Subscription;
-  private observer: Observer<void>;
+  blur$: BehaviorSubject<void> = new BehaviorSubject(null);
   keyboardSelectionIndex = null;
-  blur$: Observable<void> = new Observable(observer => {
-    this.observer = observer;
-  });
   val;
 
   constructor(public elemenetRef: ElementRef<HTMLInputElement>) {
@@ -51,7 +49,7 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
   @HostListener('blur')
   blurHandler() {
     this.onTouch();
-    this.observer.next();
+    this.blur$.next();
     this.closeDropdown();
   }
 

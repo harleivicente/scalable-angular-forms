@@ -16,13 +16,14 @@ export class FieldErrorComponent implements OnInit {
   ngOnInit() {
     this.updateErrorVisibility();
 
-    // Update message when touched has been changed
+    // Update when blured
     if (this.formField && this.formField.blur$) {
       this.formField.blur$.subscribe(() => {
         this.updateErrorVisibility();
       });
     }
 
+    // Update when status change
     if (this.formField && this.formField.control) {
       this.formField.control.statusChanges.subscribe(() => {
         this.updateErrorVisibility();
