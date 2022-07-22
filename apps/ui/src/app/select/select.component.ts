@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnInit, QueryList, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnDestroy, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subject, Subscription } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
+import { SelectOptionComponent } from '../select-option/select-option.component';
 
 @Component({
   selector: 'pct-select',
@@ -15,14 +16,16 @@ import { SelectCurrentDirective } from '../select-current.directive';
     }
   ]
 })
-export class SelectComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
   @ContentChild(SelectCurrentDirective, { static: true }) currentTemplateDirective: SelectCurrentDirective;
+  @ContentChildren(SelectOptionComponent) options: QueryList<SelectOptionComponent>;
   
   @HostBinding('class.dropdown-open')
   protected isDropdownOpen = false;
 
+  private optionSelectSubscriptions: Subscription[] = [];
+  private optionListSubscription: Subscription;
   private observer: Observer<void>;
-  private optionCounter = 0;
   public keyboardSelectionIndex: BehaviorSubject<number> = new BehaviorSubject(null);
 
   public blur$: Observable<void> = new Observable(observer => {
@@ -53,11 +56,34 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
     this.elemenetRef.nativeElement.setAttribute("tabindex", "0");
   }
 
-  ngOnInit() {
-    this.keyboardSelectionIndex.subscribe(v => console.log(v));
+  ngOnInit() {}
+  
+  ngAfterViewInit() {
+    this.hookUpOptionSubcriptions();
+    this.optionListSubscription = this.options.changes.subscribe(() => {
+      this.hookUpOptionSubcriptions();
+    });
   }
 
-  ngAfterViewInit() {}
+  ngOnDestroy() {
+    this.clearOptionSelectSubcriptions();
+    this.optionListSubscription.unsubscribe();
+  }
+
+  private clearOptionSelectSubcriptions() {
+    this.optionSelectSubscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  private hookUpOptionSubcriptions() {
+    this.clearOptionSelectSubcriptions();
+    this.optionSelectSubscriptions = this.options.map(option => {
+      return option.selected.subscribe(value => {
+        this.selectOption(value);
+      });
+    });
+  }
 
   public selectOption(value) {
     this.val = value
@@ -65,10 +91,6 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
     this.onTouch(value)
     this.isDropdownOpen = false;
   }
-
-  public incrementOptionCount() { this.optionCounter++; }
-
-  public decreaseOptionCount() { this.optionCounter--; }
 
   protected displayClickHandler() {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -108,7 +130,7 @@ export class SelectComponent implements OnInit, AfterViewInit, ControlValueAcces
   private handleMoveKeyboardSelection(direction: "UP" | "DOWN") {
     const up = direction === "UP";
     const down = direction === "DOWN";
-    const numberOfOptions = this.optionCounter;
+    const numberOfOptions = 0;
     const lastIndex = numberOfOptions - 1;
     const currentIndex = this.keyboardSelectionIndex.value;
 

@@ -1,5 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output } from '@angular/core';
-import { SelectComponent } from '../select/select.component';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'pct-select-option',
@@ -8,40 +7,17 @@ import { SelectComponent } from '../select/select.component';
 })
 export class SelectOptionComponent implements OnInit, OnDestroy {
   @Input() value: any;
-  protected optionIndex = null;
-  protected isKeyboardSelection = false;
+  @Output() selected: EventEmitter<any> = new EventEmitter();
 
   @HostListener('click')
   protected clickHandler() {
-    this.select.selectOption(this.value);
+    this.selected.next(this.value);
   }
 
-  constructor(
-    @Optional() private select: SelectComponent,
-    private elementRef: ElementRef<HTMLElement>
-  ) {}
+  constructor() {}
 
-  ngOnInit() {
-    if (this.select) {
-      this.select.incrementOptionCount();
-    }
+  ngOnInit() {}
 
-    // Set option index
-    const self = this.elementRef.nativeElement;
-    const parent = self.parentElement;
-    if (!parent) return null;
-    this.optionIndex = Array.prototype.indexOf.call(parent.children, self);
-
-    this.select.keyboardSelectionIndex.subscribe(selectedIndex => {
-      this.isKeyboardSelection = this.optionIndex === selectedIndex;
-    });
-
-  }
-
-  ngOnDestroy() {
-    if (this.select) {
-      this.select.decreaseOptionCount();
-    }
-  }
+  ngOnDestroy() {}
 
 }
