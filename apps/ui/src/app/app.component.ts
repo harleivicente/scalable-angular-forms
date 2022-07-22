@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   professores = [
     { id: 1, nome: 'Bruno', idade: 34, altoCusto: false, formacao: "Fisioterapia", profileUrl: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairFroBand&accessoriesType=Sunglasses&hairColor=Blue&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=BlazerShirt&clotheColor=Gray01&eyeType=Happy&eyebrowType=UnibrowNatural&mouthType=Default&skinColor=Tanned' },
-    { id: 2, nome: 'Helena',  idade: 25, altoCusto: true, formacao: "Muscalação", profileUrl: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairBigHair&accessoriesType=Wayfarers&hairColor=Black&facialHairType=BeardMajestic&facialHairColor=Red&clotheType=GraphicShirt&clotheColor=Black&graphicType=Pizza&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Tongue&skinColor=Light' },
+    { id: 2, nome: 'Matias',  idade: 25, altoCusto: true, formacao: "Muscalação", profileUrl: 'https://avataaars.io/?avatarStyle=Circle&topType=LongHairBigHair&accessoriesType=Wayfarers&hairColor=Black&facialHairType=BeardMajestic&facialHairColor=Red&clotheType=GraphicShirt&clotheColor=Black&graphicType=Pizza&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&mouthType=Tongue&skinColor=Light' },
     { id: 3, nome: 'Roberto',  idade: 41, altoCusto: false, formacao: "Natação", profileUrl: 'https://avataaars.io/?avatarStyle=Circle&topType=ShortHairSides&accessoriesType=Kurt&hatColor=Pink&hairColor=Blonde&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Blue01&graphicType=Skull&eyeType=Close&eyebrowType=UnibrowNatural&mouthType=Sad&skinColor=DarkBrown' }
   ];
 

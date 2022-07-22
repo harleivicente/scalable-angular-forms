@@ -45,13 +45,13 @@
     <pct-select formControlName="professor">
 
       <div class="professor-selected-item" *pctSelectCurrent="let item">
-        <img src="https://avataaars.io/?avatarStyle=Circle" />
+        <img src="{{ item.profileUrl }}" />
         {{ item.nome }}
       </div>
 
       <pct-select-option *ngFor="let professor of professores; let last = last" [value]="professor">
         <div class="professor-item" [ngClass]="{ last: last }">
-          <img src="https://avataaars.io/?avatarStyle=Circle" />
+          <img src="{{ professor.profileUrl }}" />
           <div class="info">
             <div> {{ professor.nome }} - {{ professor.idade }} </div>
             <div class="formacao"> {{ professor.formacao }} </div>
