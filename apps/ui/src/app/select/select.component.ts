@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, Input, OnDestroy, OnInit, QueryList, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, OnDestroy, OnInit, QueryList, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BehaviorSubject, Observable, Observer, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { SelectCurrentDirective } from '../select-current.directive';
 import { SelectOptionComponent } from '../select-option/select-option.component';
 
@@ -24,9 +24,11 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
 
   private optionSelectSubscriptions: Subscription[] = [];
   private optionListSubscription: Subscription;
+  private keyboardSelectionIndex = null;
+  
+  protected internalValue;
+  
   blur$: BehaviorSubject<void> = new BehaviorSubject(null);
-  keyboardSelectionIndex = null;
-  val;
 
   constructor(public elemenetRef: ElementRef<HTMLInputElement>) {
     this.elemenetRef.nativeElement.setAttribute("tabindex", "0");
@@ -71,7 +73,7 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
 
       if (this.isDropdownOpen && this.keyboardSelectionIndex !== null) {
         const value = this.options.toArray()[this.keyboardSelectionIndex].value;
-        this.value = value;
+        this.selectValue(value);
         this.closeDropdown();
         return;
       }
@@ -79,14 +81,14 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
     }
   }
 
-  set value(val) {
-    this.val = val
-    this.onChange(val)
-    this.onTouch(val)
+  selectValue(value) {
+    this.internalValue = value;
+    this.onChange(value);
+    this.onTouch(value);
   }
 
   get valueIsDefined() {
-    return !!this.val && typeof this.val !== 'boolean';
+    return !!this.internalValue && typeof this.internalValue !== 'boolean';
   }
 
   get selectedValueTemplate(): TemplateRef<any> {
@@ -102,7 +104,7 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
   onTouch: any = () => {}
 
   writeValue(value: any){ 
-    this.val = value;
+    this.internalValue = value;
   }
 
   registerOnChange(fn: any){
@@ -132,7 +134,7 @@ export class SelectComponent implements OnInit, OnDestroy, AfterViewInit, Contro
     this.clearOptionSelectSubcriptions();
     this.optionSelectSubscriptions = this.options.map(option => {
       return option.selected.subscribe(value => {
-        this.value = value;
+        this.selectValue(value);
         this.closeDropdown();
       });
     });

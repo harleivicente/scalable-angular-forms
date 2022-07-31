@@ -7,12 +7,12 @@
 
         <ng-container *ngIf="selectedValueTemplate">
             <ng-container 
-            *ngTemplateOutlet="selectedValueTemplate; context: { $implicit: val }"
+            *ngTemplateOutlet="selectedValueTemplate; context: { $implicit: internalValue }"
             ></ng-container>
         </ng-container>
 
         <ng-container *ngIf="!selectedValueTemplate">
-            {{ val }}
+            {{ internalValue }}
         </ng-container>
 
     </ng-container>
