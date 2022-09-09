@@ -1,14 +1,11 @@
 import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
-import { Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
 
 @Directive({
   selector: 'input[pctTextInput]'
 })
 export class TextInputDirective implements OnInit {
-  private observer: Observer<void>;
-  blur$: Observable<void> = new Observable(observer => {
-    this.observer = observer;
-  });
+  private blur$: BehaviorSubject<void> = new BehaviorSubject<void>(null);
 
   private css = `
     width: 100%;
@@ -20,7 +17,7 @@ export class TextInputDirective implements OnInit {
 
   @HostListener('blur')
   blurHandler() {
-    this.observer.next();
+    this.blur$.next();
   }
 
   ngOnInit() {
