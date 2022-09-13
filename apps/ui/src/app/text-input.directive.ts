@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
   selector: 'input[pctTextInput]'
 })
 export class TextInputDirective implements OnInit {
-  private blur$: BehaviorSubject<void> = new BehaviorSubject<void>(null);
+  blur$: BehaviorSubject<void> = new BehaviorSubject<void>(null);
 
   private css = `
     width: 100%;
