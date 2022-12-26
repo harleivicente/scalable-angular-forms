@@ -7,7 +7,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'ui';
 
   tiposDePlano = [
     { id: 1, nome: 'Plano Basico', preco: 67, },
@@ -42,4 +41,5 @@ export class AppComponent implements OnInit {
   submitHandler() {
     console.log(this.formGroup.value)
   }
+
 }
